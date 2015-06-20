@@ -16,7 +16,7 @@ import re
 import ConfigParser
 
 config = ConfigParser.ConfigParser()
-config.readfp(open('sample-env.cfg'))
+config.readfp(open('env.cfg'))
 default_source = config.get('env', 'source')
 default_target = config.get('env', 'target')
 
