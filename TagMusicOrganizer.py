@@ -13,6 +13,12 @@ import eyed3
 import glob
 import argparse
 import re
+import ConfigParser
+
+config = ConfigParser.ConfigParser()
+config.readfp(open('sample-env.cfg'))
+default_source = config.get('env', 'source')
+default_target = config.get('env', 'target')
 
 def splitFeaturedArtist(string_to_check):
     match = re.match('(.*)\[\( ]f(?:ea)?t.?(?:uring)? *([a-z0-9 &-_+]*)\)?(\(.*\))?',
@@ -26,8 +32,8 @@ def splitFeaturedArtist(string_to_check):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.set_defaults(debug=False,
-                        source='/Users/derek/Desktop/',
-                        target='/Users/derek/Music/Downloaded/',
+                        source=default_source,
+                        target=default_target,
                         manual_artist=''
                         )
     parser.add_argument('-src', '-in', dest='source', help='Source directory')
@@ -90,14 +96,17 @@ if __name__ == "__main__":
                   (' (ft. ' + featured_artist + ')' if featured_artist else '') +
                   (' ' + extra_title if extra_title else ''))
         print('Output path: ' + path)
-        try:
-            os.makedirs(path)
-            print('Made directory')
-        except OSError as exc:
-            if os.path.isdir(path):
-                pass
-            else:
-                raise
+        if debug:
+            print('Would have made directory')
+        else:
+            try:
+                os.makedirs(path)
+                print('Made directory')
+            except OSError as exc:
+                if os.path.isdir(path):
+                    pass
+                else:
+                    raise
         print('Output name: ' + rename)
         if not debug:
             audio_file.rename(path + rename)
