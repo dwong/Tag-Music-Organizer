@@ -21,10 +21,14 @@ default_source = config.get('env', 'source')
 default_target = config.get('env', 'target')
 
 def splitFeaturedArtist(string_to_check):
-    match = re.match('(.*)\[\( ]f(?:ea)?t.?(?:uring)? *([a-z0-9 &-_+]*)\)?(\(.*\))?',
+    match = re.match('(.*)[\( ]*f(?:ea)?t.?(?:uring)? *([a-z0-9 &-_+]*)[\( ]*(\(.*\))?',
                      string_to_check, re.IGNORECASE)
+    if debug:
+        if match:
+            print('Found featured artist in: "%s"' % string_to_check)
+        else:
+            print('No featured artist in "%s"' % string_to_check)
     if match:
-        print('Found featured artist in: ' + string_to_check)
         return match.group(1), match.group(2), match.group(3)
     else:
         return None
