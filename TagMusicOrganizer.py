@@ -87,13 +87,18 @@ if __name__ == "__main__":
         extra_title = None
         if split_title:
             title, featured_artist, extra_title = split_title
-            
         title = title.strip().replace('/', '-')
         if featured_artist:
             featured_artist = featured_artist.strip()
         
         # Output to target directory as Artist/Album/NN. Artist - Song.mp3
         artist_folder = manual_artist if manual_artist else artist
+
+        # Ensure valid characters in path
+        artist_folder = artist_folder.replace('/', '-')
+        album = album.replace('/', '-')
+
+        # Construct output path
         path = target + '/' + artist_folder + '/' + album + '/'
         rename = (('%02d' % track_number) + '. ' + artist + ' - ' + title +
                   (' (ft. ' + featured_artist + ')' if featured_artist else '') +
