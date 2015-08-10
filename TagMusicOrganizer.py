@@ -48,6 +48,9 @@ if __name__ == "__main__":
     debug = args['debug']
     manual_artist = args['manual_artist']
 
+    if debug:
+        print('Source: %s\nTarget: %s' % (source, target))
+        
     # Open files
     files = []
     if os.path.isfile(source):
