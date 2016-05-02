@@ -21,7 +21,7 @@ default_source = config.get('env', 'source')
 default_target = config.get('env', 'target')
 
 def splitFeaturedArtist(string_to_check):
-    match = re.match('(.*)[\( ]*(?:f(?:ea)?t.?(?:uring)?|,) *([a-z0-9 &-_+]*)[\( ]*(\(.*\))?',
+    match = re.match('([^\(]*)[\( ]*(?:f(?:ea)?t.?(?:uring)?|,) *([a-z0-9 &-_+]*)[\)\( ]*(\(.*\))?',
                      string_to_check, re.IGNORECASE)
     if debug:
         if match:
@@ -29,6 +29,8 @@ def splitFeaturedArtist(string_to_check):
         else:
             print('No featured artist in "%s"' % string_to_check)
     if match:
+        if debug:
+            print(match.group(1), match.group(2), match.group(3))
         return match.group(1), match.group(2), match.group(3)
     else:
         return None
@@ -78,12 +80,8 @@ if __name__ == "__main__":
 
         # Check for ft, feat, etc in artist name
         artists = splitFeaturedArtist(artist)
-        featured_artist = None
         if artists:
-            print(artists)
             artist, featured_artist, extra = artists
-            if extra:
-                featured_artist += extra
 
         artist = artist.strip()
 
@@ -93,7 +91,8 @@ if __name__ == "__main__":
             title, featured_artist, extra_title = split_title
         title = title.strip().replace('/', '-')
         if featured_artist:
-            featured_artist = featured_artist.strip()
+            featured_artist = featured_artist.strip().replace(')', '')
+            
         
         # Output to target directory as Artist/Album/NN. Artist - Song.mp3
         artist_folder = manual_artist if manual_artist else artist
@@ -104,9 +103,13 @@ if __name__ == "__main__":
 
         # Construct output path
         path = target + '/' + artist_folder + '/' + album + '/'
-        rename = (('%02d' % track_number) + '. ' + artist + ' - ' + title +
-                  (' (ft. ' + featured_artist + ')' if featured_artist else '') +
-                  (' ' + extra_title if extra_title else ''))
+        track_number = ('%02d' % track_number)
+        featured_artist_output = ' (ft. ' + featured_artist + ')' if featured_artist else ''
+        if debug:
+            print('featured artist string: %s' % featured_artist_output)
+        extra_title = ' ' + extra_title if extra_title else ''
+        rename = (track_number + '. ' + artist + ' - ' + title +
+                  featured_artist_output + extra_title)
         print('Output path: ' + path)
         if debug:
             print('Would have made directory')
