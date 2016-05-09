@@ -72,6 +72,7 @@ if __name__ == "__main__":
         title = audio_file.tag.title
         album = audio_file.tag.album
         track_number, total_tracks = audio_file.tag.track_num
+        featured_artist = None
 
         if album is None:
             album = 'Untitled'
