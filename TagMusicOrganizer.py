@@ -19,9 +19,10 @@ config = ConfigParser.ConfigParser()
 config.readfp(open(os.path.dirname(os.path.realpath(__file__)) + '/env.cfg'))
 default_source = config.get('env', 'source')
 default_target = config.get('env', 'target')
+debug = False
 
 def splitFeaturedArtist(string_to_check):
-    match = re.match('([^\(]*)[\( ]*(?:f(?:ea)?t.?(?:uring)?|,) *([a-z0-9 &-_+]*)[\)\( ]*(\(.*\))?',
+    match = re.match('([^\(]*)?[\( ]*(?:f(?:ea)?t\.?(?:uring)?) *([a-z0-9 &-_+]*)?[\)\( ]+(\(+.*\)+)?',
                      string_to_check, re.IGNORECASE)
     if debug:
         if match:
@@ -30,7 +31,7 @@ def splitFeaturedArtist(string_to_check):
             print('No featured artist in "%s"' % string_to_check)
     if match:
         if debug:
-            print(match.group(1), match.group(2), match.group(3))
+            print('artist: %s, featured artist: %s, extra: %s' % (match.group(1), match.group(2), match.group(3)))
         return match.group(1), match.group(2), match.group(3)
     else:
         return None
@@ -68,7 +69,7 @@ if __name__ == "__main__":
     for f in files:
         print('reading: ' + f)
         audio_file = eyed3.load(f)
-        artist = audio_file.tag.artist
+        artist = manual_artist if manual_artist else audio_file.tag.artist
         title = audio_file.tag.title
         album = audio_file.tag.album
         track_number, total_tracks = audio_file.tag.track_num
@@ -80,12 +81,16 @@ if __name__ == "__main__":
             track_number = 1
 
         # Check for ft, feat, etc in artist name
+        if debug:
+            print('checking id3 artist tag')
         artists = splitFeaturedArtist(artist)
         if artists:
             artist, featured_artist, extra = artists
 
         artist = artist.strip()
 
+        if debug:
+            print('checking id3 title tag')
         split_title = splitFeaturedArtist(title)
         extra_title = None
         if split_title:
@@ -96,7 +101,7 @@ if __name__ == "__main__":
             
         
         # Output to target directory as Artist/Album/NN. Artist - Song.mp3
-        artist_folder = manual_artist if manual_artist else artist
+        artist_folder = artist
 
         # Ensure valid characters in path
         artist_folder = artist_folder.replace('/', '-')
