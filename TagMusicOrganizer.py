@@ -32,7 +32,7 @@ def splitFeaturedArtist(string_to_check):
     if match:
         if debug:
             print('artist: %s, featured artist: %s, extra: %s' % (match.group(1), match.group(2), match.group(3)))
-        return match.group(1), match.group(2), match.group(3)
+        return match.group(1).strip(), match.group(2).strip(), match.group(3).strip()
     else:
         return None
 
@@ -97,7 +97,7 @@ if __name__ == "__main__":
             title, featured_artist, extra_title = split_title
         title = title.strip().replace('/', '-')
         if featured_artist:
-            featured_artist = featured_artist.strip().replace(')', '')
+            featured_artist = featured_artist.replace(')', '')
             
         
         # Output to target directory as Artist/Album/NN. Artist - Song.mp3
