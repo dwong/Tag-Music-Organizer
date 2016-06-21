@@ -25,3 +25,7 @@ class TagMusicOrganizerTestCase(unittest.TestCase):
     def testCommaArtist(self):
         artists = TagMusicOrganizer.splitFeaturedArtist('Crosby, Stills, Nash & Young')
         self.assertEqual(artists, None)
+
+    def testFeaturedWithAmpersand(self):
+        artist, ft, extra = TagMusicOrganizer.splitFeaturedArtist('How Did We Get Here ft Andy Mineo & JGivens')
+        self.assertEqual('Andy Mineo & JGivens', ft)
