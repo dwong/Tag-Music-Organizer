@@ -29,3 +29,7 @@ class TagMusicOrganizerTestCase(unittest.TestCase):
     def testFeaturedWithAmpersand(self):
         artist, ft, extra = TagMusicOrganizer.splitFeaturedArtist('How Did We Get Here ft Andy Mineo & JGivens')
         self.assertEqual('Andy Mineo & JGivens', ft)
+
+if __name__ == '__main__':
+    unittest.main()        
+
