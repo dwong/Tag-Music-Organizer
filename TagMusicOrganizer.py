@@ -22,7 +22,7 @@ default_target = config.get('env', 'target')
 debug = False
 
 def splitFeaturedArtist(string_to_check):
-    match = re.match('([^\(]*)?[\( ]*(?:f(?:ea)?t[\.]?(?:uring)?) *([a-z0-9\.\ &-]*)[\)\( ]?(.*)?',
+    match = re.match('([^\(]*)?[\( ]*(?:f(?:ea)?t[\.]?(?:uring)?) *([a-z0-9\.\ &\-,]*)[\)\( ]?(.*)?',
                      string_to_check, re.IGNORECASE)
     if debug:
         if match:
@@ -32,7 +32,12 @@ def splitFeaturedArtist(string_to_check):
     if match:
         if debug:
             print('artist: %s, featured artist: %s, extra: %s' % (match.group(1), match.group(2), match.group(3)))
-        return match.group(1).strip(), match.group(2).strip(), match.group(3).strip()
+        before_featured = match.group(1).strip()
+        featured_artist = match.group(2).strip()
+        extra = match.group(3).strip()
+        if featured_artist:
+            featured_artist = featured_artist.replace(')', '')
+        return before_featured, featured_artist, extra
     else:
         return None
 
@@ -83,8 +88,7 @@ if __name__ == "__main__":
         title = audio_file.tag.title
         album = audio_file.tag.album
         track_number, total_tracks = audio_file.tag.track_num
-        featured_artist = removeArtistFromList(audio_file.tag.artist,
-                                               manual_artist) if manual_artist else None
+        featured_artist = None
 
         if album is None:
             album = 'Untitled'
@@ -98,19 +102,20 @@ if __name__ == "__main__":
             artists = splitFeaturedArtist(artist)
             if artists:
                 artist, featured_artist, extra = artists
+        else:
+            featured_artist = removeArtistFromList(audio_file.tag.artist,
+                                                   manual_artist)
+            
 
         artist = artist.strip()
 
         extra_title = None
-        if not manual_artist:
-            if debug:
-                print('checking id3 title tag')
-            split_title = splitFeaturedArtist(title)
-            if split_title:
-                title, featured_artist, extra_title = split_title
-            title = title.strip().replace('/', '-')
-            if featured_artist:
-                featured_artist = featured_artist.replace(')', '')
+        if debug:
+            print('checking id3 title tag')
+        split_title = splitFeaturedArtist(title)
+        if split_title:
+            title, featured_artist, extra_title = split_title
+        title = title.strip().replace('/', '-')
             
         
         # Output to target directory as Artist/Album/NN. Artist - Song.mp3

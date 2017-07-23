@@ -18,6 +18,12 @@ class TagMusicOrganizerTestCase(unittest.TestCase):
         artist, ft, extra = TagMusicOrganizer.splitFeaturedArtist('Fantasy featuring O.D.B.')
         self.assertEqual('O.D.B.', ft)
 
+    def testFeaturedWithCommas(self):
+        artist, ft, extra = TagMusicOrganizer.splitFeaturedArtist('Streets of Philadelphia (feat. Mac the Doulos, Young Joshua, Ackdavis and R-Swift)')
+        self.assertEqual('Mac the Doulos, Young Joshua, Ackdavis and R-Swift', ft)
+        self.assertEqual('', extra)
+        self.assertEqual('Streets of Philadelphia', artist)
+
     def testExtraMix(self):
         artist, ft, extra = TagMusicOrganizer.splitFeaturedArtist('Say Something (ft Someone) [Radio Edit]')
         self.assertEqual('[Radio Edit]', extra)
