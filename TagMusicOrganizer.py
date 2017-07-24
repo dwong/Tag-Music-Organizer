@@ -22,7 +22,7 @@ default_target = config.get('env', 'target')
 debug = False
 
 def splitFeaturedArtist(string_to_check):
-    match = re.match('([^\(]*)?[\( ]*(?:f(?:ea)?t[\.]?(?:uring)?) *([a-z0-9\.\ &\-,]*)[\)\( ]?(.*)?',
+    match = re.match('([^\(]*)?[\( ]*(?:f(?:ea)?t[\.]?(?:uring)?) *([a-z0-9\.\ &\-,\']*)[\)\( ]?(.*)?',
                      string_to_check, re.IGNORECASE)
     if debug:
         if match:

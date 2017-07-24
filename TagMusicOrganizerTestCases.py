@@ -24,6 +24,10 @@ class TagMusicOrganizerTestCase(unittest.TestCase):
         self.assertEqual('', extra)
         self.assertEqual('Streets of Philadelphia', artist)
 
+    def testFeaturedWithApostrophe(self):
+        artist, ft, extra = TagMusicOrganizer.splitFeaturedArtist('Missio Dei (feat. God\'s Servant)')
+        self.assertEqual('God\'s Servant', ft)
+
     def testExtraMix(self):
         artist, ft, extra = TagMusicOrganizer.splitFeaturedArtist('Say Something (ft Someone) [Radio Edit]')
         self.assertEqual('[Radio Edit]', extra)
