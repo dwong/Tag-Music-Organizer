@@ -116,7 +116,12 @@ if __name__ == "__main__":
         if split_title:
             title, featured_artist, extra_title = split_title
         title = title.strip().replace('/', '-')
-            
+
+        if featured_artist:
+            if debug:
+                print('removing featured artist "%s" from artists "%s"' %
+                      (featured_artist, artist))
+            artist = removeArtistFromList(artist, featured_artist)
         
         # Output to target directory as Artist/Album/NN. Artist - Song.mp3
         artist_folder = artist
@@ -134,7 +139,6 @@ if __name__ == "__main__":
         extra_title = ' ' + extra_title if extra_title else ''
         rename = (track_number + '. ' + artist + ' - ' + title +
                   featured_artist_output + extra_title)
-        print('Output path: ' + path)
         if debug:
             print('Would have made directory')
         else:
@@ -146,6 +150,7 @@ if __name__ == "__main__":
                     pass
                 else:
                     raise
-        print('Output name: ' + rename)
+        print('%sOutput file: %s%s' %
+              ('***' if debug else None, path, rename))
         if not debug:
             audio_file.rename(path + rename)
