@@ -41,16 +41,25 @@ class TagMusicOrganizerTestCase(unittest.TestCase):
         self.assertEqual('Andy Mineo & JGivens', ft)
 
     def testManualArtistInArtists(self):
-        featured = TagMusicOrganizer.removeArtistFromList('Andy Mineo,Mali Music', 'Andy Mineo')
+        featured = TagMusicOrganizer.removeArtistsFromList('Andy Mineo,Mali Music', 'Andy Mineo')
         self.assertEqual('Mali Music', featured)
 
     def testNoneManualArtist(self):
-        featured = TagMusicOrganizer.removeArtistFromList('Andy Mineo,Mali Music', None)
+        featured = TagMusicOrganizer.removeArtistsFromList('Andy Mineo,Mali Music', None)
         self.assertEqual(None, featured)
 
     def testManualArtistInMiddle(self):
-        featured = TagMusicOrganizer.removeArtistFromList('Lecrae,Andy Mineo,Mali Music', 'Andy Mineo')
+        featured = TagMusicOrganizer.removeArtistsFromList('Lecrae,Andy Mineo,Mali Music', 'Andy Mineo')
         self.assertEqual(featured, 'Lecrae,Mali Music')
+
+    def testRemoveArtistsFromArtists(self):
+        featured = TagMusicOrganizer.removeArtistsFromList('Lecrae,Andy Mineo,Mali Music', 'Lecrae, Andy Mineo')
+        self.assertEqual(featured, 'Mali Music')
+
+    def testRemoveArtistsWithAndFromArtists(self):
+        featured = TagMusicOrganizer.removeArtistsFromList('Lecrae,Andy Mineo,Mali Music', 'Lecrae and Andy Mineo')
+        self.assertEqual(featured, 'Mali Music')
+
 
 if __name__ == '__main__':
     unittest.main()        

@@ -41,12 +41,21 @@ def splitFeaturedArtist(string_to_check):
     else:
         return None
 
-def removeArtistFromList(artists, artist_to_remove):
+def normalizeArtistList(artists):
+    return re.sub(' and ', ', ', artists)
+    
+def removeArtistsFromList(artists, artists_to_remove):
     """Mainly used to discover featured when manual artist set."""
-    if artists and artist_to_remove:
-        leftover_artists = artists.replace(artist_to_remove, '')
-        leftover_artists = leftover_artists.lstrip(',').rstrip(',')
-        return re.sub(',+', ',', leftover_artists)
+    if artists and artists_to_remove:
+        leftover_artists = normalizeArtistList(artists)
+        for artist_to_remove in [x.strip()
+                                 for x
+                                 in normalizeArtistList(
+                                     artists_to_remove).split(',')]:
+            if debug:
+                print('Removing "%s" from "%s"' % (artist_to_remove, leftover_artists))
+            leftover_artists = leftover_artists.replace(artist_to_remove, '')
+        return re.sub(',+', ',', leftover_artists).lstrip(',').rstrip(',')
     else:
         return None
 
@@ -103,7 +112,7 @@ if __name__ == "__main__":
             if artists:
                 artist, featured_artist, extra = artists
         else:
-            featured_artist = removeArtistFromList(audio_file.tag.artist,
+            featured_artist = removeArtistsFromList(audio_file.tag.artist,
                                                    manual_artist)
             
 
@@ -117,12 +126,14 @@ if __name__ == "__main__":
             title, featured_artist, extra_title = split_title
         title = title.strip().replace('/', '-')
 
-        if featured_artist:
+        if featured_artist and not manual_artist:
             if debug:
                 print('removing featured artist "%s" from artists "%s"' %
                       (featured_artist, artist))
-            artist = removeArtistFromList(artist, featured_artist)
-        
+            artist = removeArtistsFromList(artist, featured_artist)
+
+        featured_artist = normalizeArtistList(featured_artist)
+
         # Output to target directory as Artist/Album/NN. Artist - Song.mp3
         artist_folder = artist
 
