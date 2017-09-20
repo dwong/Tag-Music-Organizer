@@ -116,6 +116,18 @@ if __name__ == "__main__":
             artists = splitFeaturedArtist(artist)
             if artists:
                 artist, featured_artist, extra = artists
+            else:
+                artist_list = artist.split(',')
+                if debug:
+                    print('Artist list: %s' % ', '.join(map(str, artist_list)))
+                if artist_list and len(artist_list) > 1 and not featured_artist:
+                    if debug:
+                        print('Grabbing first artist, moving rest to featured')
+                    artist = artist_list.pop(0)
+                    featured_artist = ', '.join(
+                        [x.strip() for x in artist_list])
+            if debug:
+                print('Artist: %s, Featured: %s' % (artist, featured_artist))
         else:
             featured_artist = removeArtistsFromList(audio_file.tag.artist,
                                                    manual_artist)
