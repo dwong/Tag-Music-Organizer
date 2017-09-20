@@ -60,6 +60,8 @@ class TagMusicOrganizerTestCase(unittest.TestCase):
         featured = TagMusicOrganizer.removeArtistsFromList('Lecrae,Andy Mineo,Mali Music', 'Lecrae and Andy Mineo')
         self.assertEqual(featured, 'Mali Music')
 
+    def testNormalizeWithNone(self):
+        self.assertEqual(None, TagMusicOrganizer.normalizeArtistList(None))
 
 if __name__ == '__main__':
     unittest.main()        

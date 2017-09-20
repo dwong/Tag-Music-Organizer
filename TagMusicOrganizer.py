@@ -42,7 +42,12 @@ def splitFeaturedArtist(string_to_check):
         return None
 
 def normalizeArtistList(artists):
-    return re.sub(' and ', ', ', artists)
+    if debug:
+        print('normalizeArtistList: %s' % artists)
+    if artists:
+        return re.sub(' and ', ', ', artists)
+    else:
+        return None
     
 def removeArtistsFromList(artists, artists_to_remove):
     """Mainly used to discover featured when manual artist set."""
