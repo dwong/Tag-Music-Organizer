@@ -13,9 +13,9 @@ import eyed3
 import glob
 import argparse
 import re
-import ConfigParser
+import configparser
 
-config = ConfigParser.ConfigParser()
+config = configparser.ConfigParser()
 config.readfp(open(os.path.dirname(os.path.realpath(__file__)) + '/env.cfg'))
 default_source = config.get('env', 'source')
 default_target = config.get('env', 'target')

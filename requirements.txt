@@ -1,3 +1,4 @@
 # Requirements for TagMusicOrganizer.py
 
 eyed3
+configparser
