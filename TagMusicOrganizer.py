@@ -155,8 +155,8 @@ if __name__ == "__main__":
         artist_folder = artist
 
         # Ensure valid characters in path
-        artist_folder = artist_folder.replace('/', '-')
-        album = album.replace('/', '-')
+        artist_folder = artist_folder.replace('/', '-').strip()
+        album = album.replace('/', '-').strip()
 
         # Construct output path
         path = target + '/' + artist_folder + '/' + album + '/'
