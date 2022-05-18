@@ -67,6 +67,10 @@ class TagMusicOrganizerTestCase(unittest.TestCase):
         ft = TagMusicOrganizer.splitFeaturedArtist('The Spinners - Leftover Tears')
         self.assertEqual(None, ft)
 
+    def testFeaturedWithFtAtEnd(self):
+        ft = TagMusicOrganizer.splitFeaturedArtist('A Gift')
+        self.assertEqual(None, ft)        
+
 if __name__ == '__main__':
     unittest.main()        
 
